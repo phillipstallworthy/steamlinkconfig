@@ -88,8 +88,10 @@ Step 4 - turn off the windows firewall
 return route from windows to PI?? tracert command
 do we need a route on windows?? dunno how to do that?
 
-Good command for seeing what's going in in dhcp
-$ sudo service dhcpcd status
+### Pi commands
+
+* `$ sudo service dhcpcd status` **"status of  dhcp, where did it get the ip from?"**
+* ```$ tail -n100 /var/log/syslog``` **"Syslog"**
 
 
 
