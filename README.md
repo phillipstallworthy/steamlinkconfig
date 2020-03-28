@@ -1,11 +1,11 @@
-# Steam Link
-Raspberry to Windows 10 SteamLink config
+# SteamLink
+Raspberry Pi to Windows 10 SteamLink config notes.
 
-## Wot?
+## Wot
 Raspberry pi connected to SteamLink to Windows 10 gaming PC (PC)
-Wifi - too slow.
+Wifi - just connecting over wifi is too slow.
 Both connected to modem by network cable - still slow (10 Mbps)
-Network cable runs between them for Steam, wifi to the modem. Challenge.
+Network cable runs between Pi and Win (wifi still works for browsing).Dunno.
 
 ## Both connected to the modem
 Network cable from Pi and Windows to modem.
@@ -17,49 +17,51 @@ Note. Modem was caching static IP that I set up earlier, fixed by modem reboot.
 
 ## Cable between them.
 
-###ethernet cable.
-Connect the pi to the pc with an ethernet cable. This needs to be a simple straight RG45 cable. No crossover required. (not sure why, modern network cards just switch modes I guess)
+### Ethernet cable.
+Connect the pi to the pc with a simple straight RG45 cable. No crossover required. (not sure why, modern network cards just switch modes I guess)
 Make sure the green and orange LED's go on.
 
-### static ip on Pi
+### Current state
+* Windows wifi set to share internet connection
+* Windows firewall allows file and print services pub and private. 
+* Pi is default - randonly assigning IP - 169.254.22.144  netmask 255.255.0.0
+* Windows IP4 is default - appears to assing random as well -IP 192.162.137.1 nm 255.255.255.0 
+Still can't ping, even with Win fw off. prob subnet issue.
+
+### Some facts
+192.169.1.1 modem IP address. 
+
+### Static IP on Pi and Win.
+Is static IP the way to go? Seems like it should be. The modem runs a dhcp server to assign IP addresses to devices that connect. Pi runs dhcp client (dhcpcd), Win must do something similar. Sure that neither are running a DHCP server, so how else would they get an IP?
+
+### Static ip on Windows
+Setting, network config, IP4 proporties.
+IP 192.168.1.50 - same range as modem. It assigns last number 1 upwards.
+Network Mask 255.255.255.0 - same 
+Default Route - Configure so that Pi and Win have default route of each other. Does that make sense??
+
+### Static ip on Pi - 
 ifconfig on the PI show the WIFI connected to wlan0 with an IP of 192.168.1.11
-So I decided to use 192.168.2.2 as my static ip.
-Graphical method:
-Right click the wifi symbol and select Wireless and Wired network settings.
-Configure inteface eth0 
-IPv4 address = 192.168.2.2/24 (the 24 is CIDR notation for a subnet of 255.255.255.0, which means the first 3 digits are for network, the last digit for the host)
-I selected Auotmatically configure empty options and Disable IPv6 - not sure if this is important or not.
 
-###Brain dump
+### WTF?
+No changes on PI, just plugged in cable. Where did this come from???
+ inet 169.254.22.144  netmask 255.255.0.0  broadcast 169.254.255.255
 
-Do I need the metrics?
+Possible pseudo random!
+https://raspberrypi.stackexchange.com/questions/34132/ssh-into-pi-why-static-ip-169-254-149-192-always
 
-cat /etc/dhcpcd.conf
-#Phill Pot, 21 Mar 2020, static ip, rounter is win PC
+### Internet connection sharing
+Comes up alot on posts as a way to do it. Don't want to as them the Pi would rely on Windows for internet. Hang on, maybe not. Pi would have wifi too.
 
-interface wlan0
-metric 301
+Static IP leads to a world of pain.
 
-interface wlan1
-metric 300
+### Brain dump
 
-interface eth0
-hostname 
-clientid 
-persistent 
-option rapid_commit
-option domain_name_servers, domain_name, domain_search, host_name
-option classless_static_routes
-option interface_mtu
-require dhcp_server_identifier
-slaac private
-noipv6 
-inform 192.168.2.2/24
-metric 200
+The lower the metric, the more likly to use a route, FYI.
 
-Step 3 - static route on the PI
-Maybe there is a more genric way of doing it, but i did
-route -n
+### Route table changes.
+Required? Don't think so, but i tryed anyway
+$ route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         192.168.1.1     0.0.0.0         UG    301    0        0 wlan0
@@ -79,21 +81,21 @@ Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         192.168.1.1     0.0.0.0         UG    301    0        0 wlan0
 192.168.1.0     0.0.0.0         255.255.255.0   U     301    0        0 wlan0
-192.168.2.1     0.0.0.0         255.255.255.255 UH    0      0        0 eth0
+192.168.2.1     0.0.0.0         255.255.255.255 UH    0      0        0 **eth0**
 
 route to the host 192.168.2.1 is not via the eth0 interface. 
 
 Again, there may be anther way (metrics??), but this does work.
 
 ### Add a static IP to windows
-
+Settings - Network - properites - IP4 - follow your nose.
 
 ### turn off the windows firewall
+Maybe not required. Not sure yet.
 
-return route from windows to PI?? tracert command
+### TODO
+route from windows to PI?? tracert command
 do we need a route on windows?? dunno how to do that?
-
-
 
 ### Pi commands
 
@@ -105,6 +107,5 @@ do we need a route on windows?? dunno how to do that?
 * `$ cat etc/os-release` **"version of pi OS"**
 * `$ cmd` **"doc"**
 
-
-### Got info
+### Info
 https://en.wikipedia.org/wiki/IP_address
