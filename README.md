@@ -1,4 +1,4 @@
-# steamlink
+# Steam Link
 Raspberry to Windows 10 SteamLink config
 
 # Situation
@@ -93,5 +93,10 @@ do we need a route on windows?? dunno how to do that?
 * `$ sudo service dhcpcd status` **"status of  dhcp, where did it get the ip from?"**
 * ```$ tail -n100 /var/log/syslog``` **"Syslog"**
 
-
-
+# Working Configuration
+Network cable from Pi to modem, and from Windows to modem.
+Restore dhcpcd.config to original state (if changed)
+Retore Windows ethernet configuration to auto, dhcp.
+Turn off wifi on both
+Ta-da! It just works. Not very well, only gets 10 Mbs, but does work.
+Note. Modem was caching static IP that I set up earlier, fixed by modem reboot.
