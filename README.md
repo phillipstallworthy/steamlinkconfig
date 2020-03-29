@@ -34,6 +34,9 @@ static ip_address=192.168.137.2/24
 * check Win routes
  * `route print`
 
+90Mbps on SteamLink from Pi to Win.
+Need to turn the wifi off on the Pi to get it to work. (maybe a metric solution to that.)
+
 ### Some facts
 192.169.1.1 modem IP address. 
 
