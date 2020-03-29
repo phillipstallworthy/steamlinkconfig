@@ -22,17 +22,24 @@ Connect the pi to the pc with a simple straight RG45 cable. No crossover require
 Make sure the green and orange LED's go on.
 
 ### Current state
-* Windows wifi set to share internet connection
-* Windows firewall allows file and print services pub and private. 
-* Pi is default - randonly assigning IP - 169.254.22.144  netmask 255.255.0.0
-* Windows IP4 is default - appears to assing random as well -IP 192.162.137.1 nm 255.255.255.0 
-Still can't ping, even with Win fw off. prob subnet issue.
+* Windows wifi set to share internet connection which always used ip 192.168.137.1 - Keeps this ip even if sharing is turned off. I don't need sharing so turned off. 
+* Windows firewall allows file and print services pub and private. (check me)
+* Pi ip set to 192.168.137.2. This puts it on the same network segment 192.168.137.0
+ * done by setting ip in dhcpcd.conf
+>  Example static IP configuration:
+interface eth0
+static ip_address=192.168.137.2/24
+* check Pi routes
+ * `route -n`
+* check Win routes
+ * `route print`
 
 ### Some facts
 192.169.1.1 modem IP address. 
 
 ### Static IP on Pi and Win.
 Is static IP the way to go? Seems like it should be. The modem runs a dhcp server to assign IP addresses to devices that connect. Pi runs dhcp client (dhcpcd), Win must do something similar. Sure that neither are running a DHCP server, so how else would they get an IP?
+**Static IP leads to a world of pain**
 
 ### Static ip on Windows
 Setting, network config, IP4 proporties.
@@ -58,7 +65,7 @@ Comes up alot on posts as a way to do it. Don't want to as them the Pi would rel
 
 Setting up wifi sharing on Windows leads to an IP of 192.168.137.1
 
-Static IP leads to a world of pain.
+.
 
 ### Brain dump
 
