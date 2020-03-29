@@ -43,15 +43,20 @@ Default Route - Configure so that Pi and Win have default route of each other. D
 ### Static ip on Pi - 
 ifconfig on the PI show the WIFI connected to wlan0 with an IP of 192.168.1.11
 
-### WTF?
+### Pi eth0 no config
 No changes on PI, just plugged in cable. Where did this come from???
  inet 169.254.22.144  netmask 255.255.0.0  broadcast 169.254.255.255
 
 Possible pseudo random!
 https://raspberrypi.stackexchange.com/questions/34132/ssh-into-pi-why-static-ip-169-254-149-192-always
 
+Avahi sets up a link-local ip address. 
+
+
 ### Internet connection sharing
 Comes up alot on posts as a way to do it. Don't want to as them the Pi would rely on Windows for internet. Hang on, maybe not. Pi would have wifi too.
+
+Setting up wifi sharing on Windows leads to an IP of 192.168.137.1
 
 Static IP leads to a world of pain.
 
@@ -105,6 +110,7 @@ do we need a route on windows?? dunno how to do that?
 * `$ tail -n100 /var/log/kern.log`
 * `$ tail -n100 /var/log/auth.log`
 * `$ cat etc/os-release` **"version of pi OS"**
+* `$ ip route get 192.168.1.1` **"route to a destination, ie check eth or wlan"**
 * `$ cmd` **"doc"**
 
 ### Info
